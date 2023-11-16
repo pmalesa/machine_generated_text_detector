@@ -2,3 +2,5 @@ task_A/data
 task_B/data
 task_C/data
 output/
+task_A/*/__pycache__/*
+task_A/*/__pycache__/*
