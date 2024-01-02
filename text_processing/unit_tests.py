@@ -153,7 +153,28 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(strings, target_strings)    
 
     def test_preprocess_text(self):
-        pass
+        input_data_file_path = "data/unit_tests/preprocess_text_input.txt"
+        try:
+            with open(input_data_file_path, "r") as file:
+                text_data = file.read()
+        except IOError as e:
+            print(f"Error reading {input_data_file_path}: {e}")
+
+        chunk_file_paths = ["data/unit_tests/chunk_1.txt", "data/unit_tests/chunk_2.txt",
+                            "data/unit_tests/chunk_3.txt", "data/unit_tests/chunk_4.txt",
+                            "data/unit_tests/chunk_5.txt"]
+        
+        chunks = []
+        for chunk_file_path in chunk_file_paths:
+            try:
+                with open(chunk_file_path, "r") as file:
+                    chunks.append(file.read())
+            except IOError as e:
+                print(f"Error reading {chunk_file_path}: {e}")
+
+        strings = tp.preprocess_text(text_data)
+        for i, chunk in enumerate(chunks):
+            self.assertEqual(strings[i], chunk)
 
 if __name__ == "__main__":
     unittest.main()

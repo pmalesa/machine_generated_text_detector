@@ -7,7 +7,9 @@ class TextProcessor:
     @staticmethod
     def preprocess_text(text: str) -> list[list[str]]:
         tokens = TextProcessor.tokenize_text(text)
-        # ...
+        token_chunks = TextProcessor.divide_into_chunks(tokens, chunk_size = 512, chunk_overlap = 64)
+        strings = TextProcessor.convert_token_chunks_to_strings(token_chunks)
+        return strings
         
     # TODO - think about tokenizing dashes, when they are not a part of a compound adjective (like well-known)
     @staticmethod
