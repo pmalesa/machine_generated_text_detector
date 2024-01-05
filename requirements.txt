@@ -2,3 +2,5 @@ pandas
 numpy
 spacy
 torch
+transformers==4.36.2
+tensorflow==2.14.1

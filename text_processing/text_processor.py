@@ -5,9 +5,9 @@ nlp = spacy.load("en_core_web_sm")
 
 class TextProcessor:
     @staticmethod
-    def preprocess_text(text: str) -> list[list[str]]:
+    def preprocess_text(text: str, chunk_size = 512, chunk_overlap = 64) -> list[list[str]]:
         tokens = TextProcessor.tokenize_text(text)
-        token_chunks = TextProcessor.divide_into_chunks(tokens, chunk_size = 512, chunk_overlap = 64)
+        token_chunks = TextProcessor.divide_into_chunks(tokens, chunk_size = chunk_size, chunk_overlap = chunk_overlap)
         strings = TextProcessor.convert_token_chunks_to_strings(token_chunks)
         return strings
         

@@ -1,7 +1,6 @@
-task_A/data
-task_B/data
-task_C/data
+data/subtask_*
 output/
 __pycache__/*
 */__pycache__/*
 */*/__pycache__/*
+TODO.md
