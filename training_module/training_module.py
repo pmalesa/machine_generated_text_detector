@@ -6,7 +6,6 @@ from datetime import datetime
 from io import StringIO
 from pandas import DataFrame
 
-from text_processing.text_processor import TextProcessor as tp
 from models.generated_text_detection_model.generated_text_detection_model import GeneratedTextDetectionModel
 
 class TrainingModule:

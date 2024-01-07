@@ -11,7 +11,6 @@ class TextProcessor:
         strings = TextProcessor.convert_token_chunks_to_strings(token_chunks)
         return strings
         
-    # TODO - think about tokenizing dashes, when they are not a part of a compound adjective (like well-known)
     @staticmethod
     def tokenize_text(text: str) -> list[str]:
         cleaned_text = text.replace("\n", " ")

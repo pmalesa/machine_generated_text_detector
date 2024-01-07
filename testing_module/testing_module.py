@@ -1,9 +1,43 @@
+import os
 import numpy as np
+import pandas as pd
+from datetime import datetime
+
+from io import StringIO
+from pandas import DataFrame
+
+from models.generated_text_detection_model.generated_text_detection_model import GeneratedTextDetectionModel
 
 class TestingModule:
     def __init__(self):
-        pass
+        self.__data: DataFrame
 
-    def run(self):
-        print("Testing started.")
-        pass
+    def test_gtd(self):
+        print("[INFO] Generated text detection model testing started.")
+        print("[INFO] Loading testing data...")
+        self.__data = self.__load_data("data/subtask_A/subtaskA_dev_monolingual.jsonl")
+
+        if not self.__data.empty:
+            print("[INFO] Testing data loaded sucessfully.")
+        else:
+            print("[ERROR] Testing data could not be loaded.")
+            return
+        
+        chunk_size = 128
+        chunk_overlap = 32
+        model_path = "output/gtd/test.h5"
+
+        if not os.path.exists(model_path):
+            print("[ERROR] Model file does not exist.")
+
+        # Model testing
+        gtd_model = GeneratedTextDetectionModel()
+        gtd_model.load(model_path)
+        gtd_model.test(self.__data["text"], self.__data["label"])
+        print("[INFO] Testing of GTD model finished!")
+
+    def __load_data(self, filename: str) -> DataFrame:
+        with open(filename, "r") as file:
+            jsonl_string = file.read()
+            jsonl_io = StringIO(jsonl_string)
+            return pd.read_json(jsonl_io, lines = True)
