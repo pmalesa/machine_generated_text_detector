@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import yaml
 
 from io import StringIO
 from pandas import DataFrame
@@ -11,6 +12,7 @@ from models.generated_text_detection_model.generated_text_detection_model import
 class TestingModule:
     def __init__(self):
         self.__data: DataFrame
+        self.__config = self.__load_config("parameters.yaml")   
 
     def test_gtd(self):
         print("[INFO] Generated text detection model testing started.")
@@ -23,16 +25,17 @@ class TestingModule:
             print("[ERROR] Testing data could not be loaded.")
             return
         
-        chunk_size = 128
-        chunk_overlap = 32
-        model_path = "output/gtd/test.h5"
+        # # Read gtd model parameters
+        self.__config = self.__config["gtd"]
 
+        model_path = self.__config["weights_path"] + "/" + self.__config["weights_filename"]
         if not os.path.exists(model_path):
             print("[ERROR] Model file does not exist.")
+            return
 
         # Model testing
         gtd_model = GeneratedTextDetectionModel()
-        gtd_model.load(model_path)
+        gtd_model.load(model_path, self.__config["chunk_size"], self.__config["chunk_overlap"])
         gtd_model.test(self.__data["text"], self.__data["label"])
         print("[INFO] Testing of GTD model finished!")
 
@@ -41,3 +44,7 @@ class TestingModule:
             jsonl_string = file.read()
             jsonl_io = StringIO(jsonl_string)
             return pd.read_json(jsonl_io, lines = True)
+        
+    def __load_config(self, config_file: str):
+        with open(config_file, 'r') as file:
+            return yaml.safe_load(file)

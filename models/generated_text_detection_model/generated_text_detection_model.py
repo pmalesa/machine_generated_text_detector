@@ -1,8 +1,10 @@
+import os
 from transformers import AutoTokenizer, TFAutoModel
 import tensorflow as tf
 import json
 
 from text_processing.text_processor import TextProcessor as tp
+
 
 tf.config.run_functions_eagerly(True)
 
@@ -61,7 +63,7 @@ class GeneratedTextDetectionModel(tf.keras.Model):
 
         # Training the model
         for i, (text, label) in enumerate(zip(texts, labels)):
-            print(f"Example {i + 1}")
+            print(f"[Example {i + 1}]")
             if i == 100:
                 print(f"[INFO] TOTAL EXAMPLES PROCESSED: {i}")
                 break
@@ -75,18 +77,20 @@ class GeneratedTextDetectionModel(tf.keras.Model):
             prediction = self.__predict_single(text)
             predictions.append(prediction)
 
-            if i == 10:
-                break
-
+        # Save predictions
         file_path = "gtd_predictions.jsonl"
-        with open(file_path, "w") as file:
+        directory = "output/gtd"
+        if not os.path.exists(directory):
+            os.makedirs(directory, exist_ok = True)
+        path = os.path.join(directory, file_path)
+        with open(path, "w") as file:
             for i, prediction in enumerate(predictions):
                 line = {"id": i, "label": prediction}
                 json_line = json.dumps(line)
                 file.write(json_line + "\n")
 
-    def load(self, path: str):
-        self.init()
+    def load(self, path: str, chunk_size = 512, chunk_overlap = 64):
+        self.init(chunk_size = chunk_size, chunk_overlap = chunk_overlap)
         self.load_weights(path)
 
     def __train_single(self, text: str, label: int):
