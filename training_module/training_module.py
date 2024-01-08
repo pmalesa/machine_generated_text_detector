@@ -14,9 +14,12 @@ class TrainingModule:
         self.__config = self.__load_config("parameters.yaml")
     
     def train_gtd(self):
+        # Read gtd model parameters
+        self.__config = self.__config["gtd"]
+
         print("[INFO] Generated text detection model training started.")
         print("[INFO] Loading training data...")
-        self.__data = self.__load_data("data/subtask_A/subtaskA_train_monolingual.jsonl")
+        self.__data = self.__load_data(self.__config["train_data_path"])
 
         if not self.__data.empty:
             print("[INFO] Training data loaded sucessfully.")
@@ -25,9 +28,6 @@ class TrainingModule:
             return
 
         gtd_model = GeneratedTextDetectionModel()
-
-        # Read gtd model parameters
-        self.__config = self.__config["gtd"]
 
         # Model training
         start = datetime.now()

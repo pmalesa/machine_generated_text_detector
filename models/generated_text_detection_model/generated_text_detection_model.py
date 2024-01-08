@@ -15,7 +15,7 @@ class GeneratedTextDetectionModel(tf.keras.Model):
         self.__deberta_model = TFAutoModel.from_pretrained("microsoft/deberta-base")
         self.__deberta_model.trainable = False
         self.__intermediate_dense_layer = tf.keras.layers.Dense(768, activation = "relu")
-        self.__output_dense_layer = tf.keras.layers.Dense(1, activation = "softmax")
+        self.__output_dense_layer = tf.keras.layers.Dense(1, activation = "sigmoid")
 
         self.__learning_rate = 0.001
         self.__epochs = 1
@@ -64,18 +64,15 @@ class GeneratedTextDetectionModel(tf.keras.Model):
         # Training the model
         for i, (text, label) in enumerate(zip(texts, labels)):
             print(f"[Example {i + 1}]")
-            if i == 100:
-                print(f"[INFO] TOTAL EXAMPLES PROCESSED: {i}")
-                break
             self.__train_single(text, label)
-            if i % 10 == 9:
-                print(f"[INFO] Examples processed so far: {i + 1}")
 
     def test(self, texts: list[str], true_labels: list[int]):
         predictions = []
         for i, text in enumerate(texts):
-            prediction = self.__predict_single(text)
-            predictions.append(prediction)
+            print(f"[Example {i + 1}]")
+            prediction = self.predict_single(text)
+            if prediction != -1:
+                predictions.append(prediction)
 
         # Save predictions
         file_path = "gtd_predictions.jsonl"
@@ -99,6 +96,10 @@ class GeneratedTextDetectionModel(tf.keras.Model):
             chunk_size = self.__chunk_size,
             chunk_overlap = self.__chunk_overlap
         )
+
+        if len(text_chunks) == 0:
+            return
+
         chunks_features = self.__tokenizer(
             text_chunks,
             padding = "max_length",
@@ -117,12 +118,16 @@ class GeneratedTextDetectionModel(tf.keras.Model):
             chunk_dataset = chunk_dataset.batch(1)
             self.fit(chunk_dataset, epochs = self.__epochs)
 
-    def __predict_single(self, text: str):
+    def predict_single(self, text: str):
         text_chunks = tp.preprocess_text(
             text,
             chunk_size = self.__chunk_size,
             chunk_overlap = self.__chunk_overlap
         )
+
+        if len(text_chunks) == 0:
+            return -1
+
         chunks_features = self.__tokenizer(
             text_chunks,
             padding = "max_length",

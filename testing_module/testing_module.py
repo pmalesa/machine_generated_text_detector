@@ -15,9 +15,12 @@ class TestingModule:
         self.__config = self.__load_config("parameters.yaml")   
 
     def test_gtd(self):
+        # Read gtd model parameters
+        self.__config = self.__config["gtd"]
+
         print("[INFO] Generated text detection model testing started.")
         print("[INFO] Loading testing data...")
-        self.__data = self.__load_data("data/subtask_A/subtaskA_dev_monolingual.jsonl")
+        self.__data = self.__load_data(self.__config["test_data_path"])
 
         if not self.__data.empty:
             print("[INFO] Testing data loaded sucessfully.")
@@ -25,9 +28,6 @@ class TestingModule:
             print("[ERROR] Testing data could not be loaded.")
             return
         
-        # # Read gtd model parameters
-        self.__config = self.__config["gtd"]
-
         model_path = self.__config["weights_path"] + "/" + self.__config["weights_filename"]
         if not os.path.exists(model_path):
             print("[ERROR] Model file does not exist.")
