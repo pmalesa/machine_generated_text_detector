@@ -8,6 +8,7 @@ from io import StringIO
 from pandas import DataFrame
 
 from models.generated_text_detection_model.generated_text_detection_model import GeneratedTextDetectionModel
+from models.language_model_detection_model.language_model_detection_model import LanguageModelDetectionModel
 
 class TestingModule:
     def __init__(self):
@@ -38,6 +39,31 @@ class TestingModule:
         gtd_model.load(model_path, self.__config["chunk_size"], self.__config["chunk_overlap"])
         gtd_model.test(self.__data["text"], self.__data["label"])
         print("[INFO] Testing of GTD model finished!")
+
+    def test_lmd(self):
+        # Read gtd model parameters
+        self.__config = self.__config["lmd"]
+
+        print("[INFO] Language model detection model testing started.")
+        print("[INFO] Loading testing data...")
+        self.__data = self.__load_data(self.__config["test_data_path"])
+
+        if not self.__data.empty:
+            print("[INFO] Testing data loaded sucessfully.")
+        else:
+            print("[ERROR] Testing data could not be loaded.")
+            return
+        
+        model_path = self.__config["weights_path"] + "/" + self.__config["weights_filename"]
+        if not os.path.exists(model_path):
+            print("[ERROR] Model file does not exist.")
+            return
+
+        # Model testing
+        gtd_model = LanguageModelDetectionModel()
+        gtd_model.load(model_path, self.__config["chunk_size"], self.__config["chunk_overlap"])
+        gtd_model.test(self.__data["text"], self.__data["label"])
+        print("[INFO] Testing of LMD model finished!")
 
     def __load_data(self, filename: str) -> DataFrame:
         with open(filename, "r") as file:

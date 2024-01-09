@@ -65,7 +65,21 @@ python test_model.py tsd
 ```
 
 ## Prediction of single examples
-In order to get a prediction on a single example from the test set run the script below.
+In order to get a prediction on a single example from the test set run the script below. The provided text example ID must exist in the corresponding .jsonl test dataset.
+
 ```bash
 python predict.py <model_name> <text_example_id>
+```
+
+There is also a possibility to perform predictions on a raw input string as shown below.
+
+```bash
+python predict.py <model_name> "Some text to test predictions..."
+```
+
+## Evaluation of the trained models
+After calling the test_model.py script with the given model the corresponding output file with predictions will be created in the output/<model_name> directory. After that the user can call evaluate the predictions of the given model by running the script below.
+
+```bash
+python evaluate_model_results.py <model_name>
 ```

@@ -26,6 +26,10 @@ class TextProcessor:
         if chunk_overlap > chunk_size:
             chunk_overlap = 1
 
+        if len(tokens) <= chunk_size:
+            chunks.append(tokens)
+            return chunks
+
         step = chunk_size - chunk_overlap
         if step <= 0:
             return []

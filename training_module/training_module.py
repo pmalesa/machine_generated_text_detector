@@ -73,7 +73,6 @@ class TrainingModule:
         chunk_size = 512
         chunk_overlap = 64
 
-        
         texts0 = self.__data["text"][63327:63527] 
         labels0 = self.__data["label"][63327:63527] 
         texts1 = self.__data["text"][60600:60700] 

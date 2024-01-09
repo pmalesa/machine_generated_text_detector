@@ -5,7 +5,6 @@ import json
 
 from text_processing.text_processor import TextProcessor as tp
 
-
 tf.config.run_functions_eagerly(True)
 
 class GeneratedTextDetectionModel(tf.keras.Model):
@@ -30,7 +29,7 @@ class GeneratedTextDetectionModel(tf.keras.Model):
         intermediate_output = self.__intermediate_dense_layer(cls_output)
         return self.__output_dense_layer(intermediate_output)
 
-    def init(self, learning_rate: float = 0.001, epochs: int = 1, chunk_size: int = 512, chunk_overlap: int = 64):
+    def __init(self, learning_rate: float = 0.001, epochs: int = 1, chunk_size: int = 512, chunk_overlap: int = 64):
         self.compile(
             optimizer = tf.keras.optimizers.Adam(learning_rate = learning_rate),
             loss = tf.keras.losses.BinaryCrossentropy(),
@@ -59,7 +58,7 @@ class GeneratedTextDetectionModel(tf.keras.Model):
             print("[ERROR] Number of examples is not equal to the number of labels!")
             return
         
-        self.init(learning_rate, epochs, chunk_size, chunk_overlap)
+        self.__init(learning_rate, epochs, chunk_size, chunk_overlap)
 
         # Training the model
         for i, (text, label) in enumerate(zip(texts, labels)):
@@ -68,6 +67,7 @@ class GeneratedTextDetectionModel(tf.keras.Model):
 
     def test(self, texts: list[str], true_labels: list[int]):
         predictions = []
+        
         for i, text in enumerate(texts):
             print(f"[Example {i + 1}]")
             prediction = self.predict_single(text)
@@ -87,7 +87,7 @@ class GeneratedTextDetectionModel(tf.keras.Model):
                 file.write(json_line + "\n")
 
     def load(self, path: str, chunk_size = 512, chunk_overlap = 64):
-        self.init(chunk_size = chunk_size, chunk_overlap = chunk_overlap)
+        self.__init(chunk_size = chunk_size, chunk_overlap = chunk_overlap)
         self.load_weights(path)
 
     def __train_single(self, text: str, label: int):

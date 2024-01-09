@@ -5,6 +5,7 @@ gtd:
   chunk_overlap: 64
   weights_path: "output/gtd"
   weights_filename: "model_weights-epochs(1)_chunk_size(512)_chunk_overlap(64).h5"
+  predictions_path: "output/gtd/gtd_predictions.jsonl"
   train_data_path: "data/subtask_A/subtaskA_train_monolingual.jsonl"
   test_data_path: "data/subtask_A/subtaskA_dev_monolingual.jsonl"
 
@@ -14,7 +15,8 @@ lmd:
   chunk_size: 512
   chunk_overlap: 64
   weights_path: "output/lmd"
-  weights_filename: ""
+  weights_filename: "language_model_detection-epochs(1)_chunk_size(512)_chunk_overlap(64).h5"
+  predictions_path: "output/lmd/lmd_predictions.jsonl"
   train_data_path: "data/subtask_B/subtaskB_train.jsonl"
   test_data_path: "data/subtask_B/subtaskB_dev.jsonl"
 
@@ -25,5 +27,6 @@ tsd:
   chunk_overlap: 64
   weights_path: "output/tsd"
   weights_filename: ""
+  prediction_filename: "tsd_predictions.jsonl"
   train_data_path: "data/subtask_C/subtaskC_train.jsonl"
   test_data_path: "data/subtask_C/subtaskC_dev.jsonl"
