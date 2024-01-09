@@ -7,6 +7,7 @@ from pandas import DataFrame
 import yaml
 
 from models.generated_text_detection_model.generated_text_detection_model import GeneratedTextDetectionModel
+from models.language_model_detection_model.language_model_detection_model import LanguageModelDetectionModel
 
 class TrainingModule:
     def __init__(self):
@@ -65,8 +66,47 @@ class TrainingModule:
         else:
             print("[ERROR] Training data could not be loaded.")
             return
+        lmd_model = LanguageModelDetectionModel()
 
-        pass
+        learning_rate = 0.01
+        epochs = 1
+        chunk_size = 512
+        chunk_overlap = 64
+
+        
+        texts0 = self.__data["text"][63327:63527] 
+        labels0 = self.__data["label"][63327:63527] 
+        texts1 = self.__data["text"][60600:60700] 
+        labels1 = self.__data["label"][60600:60700]
+        texts2 = self.__data["text"][4000:4200] 
+        labels2 = self.__data["label"][4000:4200]
+        texts3 = self.__data["text"][6000:6200] 
+        labels3 = self.__data["label"][6000:6200]
+        texts4 = self.__data["text"][60300:60500]   
+        labels4 = self.__data["label"][63527:63727]
+        texts5 = self.__data["text"][10000:10200] 
+        labels5 = self.__data["label"][10000:10200]
+
+        texts = pd.concat([texts0, texts1, texts2, texts3, texts4, texts5], ignore_index=True)
+        labels = pd.concat([labels0, labels1, labels2, labels3, labels4, labels5], ignore_index=True)
+
+        start = datetime.now()
+        lmd_model.train(texts , labels, learning_rate, epochs, chunk_size, chunk_overlap)
+        finish = datetime.now()
+        duration = finish - start
+        training_time_in_s = duration.total_seconds()
+
+        # Save model
+        directory = "output/lmd"
+        if not os.path.exists(directory):
+            os.makedirs(directory, exist_ok = True)
+        
+        model_name = f"language_model_detection-epochs({epochs})_chunk_size({chunk_size})_chunk_overlap({chunk_overlap}).h5"
+        model_save_path = os.path.join(directory, model_name)
+        lmd_model.save_weights(model_save_path)
+
+        print("[INFO] Training of LMD model finished!")
+        print(f"[INFO] Training time [min]: {training_time_in_s / 60}")
 
     def train_tsd(self):
         print("[INFO] Generated text detection model training started.")
