@@ -1,5 +1,6 @@
 import os
 from transformers import AutoTokenizer, TFAutoModel
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 import json
 import numpy as np

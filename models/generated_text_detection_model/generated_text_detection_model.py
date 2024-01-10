@@ -1,5 +1,6 @@
 import os
 from transformers import AutoTokenizer, TFAutoModel
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 import json
 
@@ -73,6 +74,8 @@ class GeneratedTextDetectionModel(tf.keras.Model):
             prediction = self.predict_single(text)
             if prediction != -1:
                 predictions.append(prediction)
+
+        # zwróc predykcje i zapisz w training_module
 
         # Save predictions
         file_path = "gtd_predictions.jsonl"
