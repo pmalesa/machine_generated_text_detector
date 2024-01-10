@@ -1,8 +1,8 @@
 gtd:
-  learning_rate: 0.001
+  learning_rate: 0.00002
   epochs: 1
-  chunk_size: 512
-  chunk_overlap: 64
+  chunk_size: 128
+  chunk_overlap: 16
   weights_path: "output/gtd"
   weights_filename: "model_weights-epochs(1)_chunk_size(512)_chunk_overlap(64).h5"
   predictions_path: "output/gtd/gtd_predictions.jsonl"

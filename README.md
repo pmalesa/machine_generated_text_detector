@@ -47,10 +47,11 @@ python train_model.py lmd
 # Human-Written vs. Machine-Generated Text Classification (Subtask C: Text separator detection)
 python train_model.py tsd
 ```
+### Training on GPU
+In order to utilize tensorflows's capabilities on GPU the user might have to install appropriate GPU drivers along with CUDA libraries. 
 
 ## Downloading the pretrained model
-It is possible to download the pretrained model from the github repository here [GitHub](https://github.com/pmalesa/machine_generated_text_detector).
-After downloading the model it needs to be placed within the project's directory and the corresponding model name and path variables in *parameters.yaml* file need to be adjusted accordingly. 
+It is possible to download the pretrained model from the github repository here [GitHub](https://github.com/pmalesa/machine_generated_text_detector), which is located under the *Releases* section of the repository's page. After downloading the model it needs to be placed within the project's directory and the corresponding model name and path variables in *parameters.yaml* file need to be adjusted accordingly. 
 
 ## Run testing of the selected model
 ```bash
